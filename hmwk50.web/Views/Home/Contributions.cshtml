@@ -1,0 +1,75 @@
+﻿@using hmwk50.data
+@model ViewModel
+
+<div class="header">
+    <h1>
+        Contributors for the
+        @Model.SimchaName simcha
+    </h1>
+</div>
+<div class="table-responsive">
+    <form method="POST" action="/home/updatecontributions">
+        <input type="hidden" name="simchaId" value="@Model.SimchaId" />
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Contribute</th>
+                <th>Name</th>
+                <th>Balance</th>
+                <th>Always Include</th>
+                <th>Amount</th>
+            </tr>
+            @foreach (Contributor contributor in Model.Contributors)
+            {
+
+                <input type="hidden" name="contributors[@contributor.Index].ContributorId" value="@contributor.Id" />
+                <tr>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="form-check form-switch">
+                                @if (contributor.AlwaysInclude || contributor.ContributionAmount != 0)
+                                {
+                                    <input style="width: 4rem; height: 2rem;" name="contributors[@contributor.Index].Include" class="form-check-input" type="checkbox" checked value="true">
+                                }
+                                else
+                                {
+                                    <input style="width: 4rem; height: 2rem;" name="contributors[@contributor.Index].Include" class="form-check-input" type="checkbox" value="true">
+                                }
+                            </div>
+                        </div>
+                    </td>
+                    <td>@contributor.LastName, @contributor.FirstName</td>
+                    <td>@contributor.Balance</td>
+                    <td style="text-align: center;">
+                        @if (contributor.AlwaysInclude)
+                        {
+                            <i style="font-size:30px" class="bi bi-check"></i>
+                        }
+                    </td>
+
+                    @if (contributor.ContributionAmount != 0)
+                    {
+                        <td>
+                            <input type="text" name="contributors[@contributor.Index].amount" class="form-control" value="@contributor.ContributionAmount"/>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <input type="text" name="contributors[@contributor.Index].amount" class="form-control" value="5" />
+                        </td>
+                    }
+
+
+
+                </tr>
+
+            }
+
+        </table>
+        <div style="text-align:center;">
+            <button class="btn-lg btn-danger">Update</button>
+        </div>
+    </form>
+</div>
+
+
